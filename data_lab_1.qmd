@@ -1,0 +1,240 @@
+---
+title: "CO2 fertilization of photosynthesis"
+format: pdf
+editor: visual
+---
+
+## Objectives
+
+In this data lab, students will learn basic plotting functions in R while examining the impact of rising CO~2~ on photosynthesis, a key flux in the global carbon cycle.
+
+## Background
+
+We will begin at the global scale by plotting the famed Mauna Loa CO~2~ curve at monthly intervals, with the twin objectives of (1) reviewing how to make layered plots with 'ggplot2', a package within the 'tidyverse' collection widely adopted by the R data science community, and (2) refreshing understanding of the seasonal cycle in atmospheric \[CO~2~\].
+
+In part II, we will zoom in to examine some controls on leaf-level photosynthesis. Photosynthesis in global-scale models relies on parameters derived from leaf-level measurements, and we will examine how net photosynthesis (A~n~) varies with leaf-internal \[CO~2~\] to obtain two of these parameters.
+
+In part III, we will read a review of ecosystem-scale CO~2~ experiments, known collectively as Free Air CO~2~ Enrichment (FACE). How and to what extent do predictions from understanding the biochemistry of photosynthesis hold when considering the whole ecosystem?
+
+Finally, your assignment will close with a written discussion synthesizing empirical and theoretical evidence for CO~2~ fertilization of photosynthesis across leaf, ecosystem, and global scales.
+
+### A technical note
+
+This is a [Quarto document](https://quarto.org/), the successor to Rmarkdown that contains some fun new features. We will use it in class to combine chunks of code with blocks of prose. When turning in your assignment, please upload both the .qmd file and the rendered .pdf.
+
+## Part I: Mauna Loa \[CO~2~\]
+
+You have probably seen these data presented in lectures and texts. We are going to plot it ourselves! These data were originally sampled by Dr. C. David Keeling of the Scripps Institution of Oceanography and can be downloaded freely from [NOAA](https://gml.noaa.gov/ccgg/trends/data.html). Read more about the history of the Keeling curve [here](https://keelingcurve.ucsd.edu/2013/04/03/the-history-of-the-keeling-curve/).
+
+I have included the .csv file in the repository; our goal is to read it in, create a pleasantly readable plot, and annotate it to further understand the seasonal fluctuations in atmospheric \[CO~2~\].
+
+It is good practice to start code by loading the libraries that will be used throughout. Here, we start with `tidyverse` and will add on in each section as needed.
+
+```{r}
+#| output: FALSE
+library(tidyverse)
+```
+
+The "#\| output: FALSE" is an execution option that suppresses the output. Mostly, this is used to keep your final document shorter and tidier.
+
+When we get tabular data from online sources, it commonly comes with a header that provides metadata, or information about the dataset. Go ahead and open the .csv file to read the metadata. What key pieces of information are conveyed?
+
+It is best practice *not* to delete these additional rows manually, but to skip over them when reading the data into R. That way, our methods are legible to a reader and more easily reproduced.
+
+```{r}
+mlo <- read_csv("co2_mm_mlo.csv",
+                     skip = 40)
+```
+
+You can examine these data in several ways. One option is to use your mouse in the Environment tab and click on the dataset. Alternatively, you can type `View(mlo)` in your console to achieve the same outcome. Below are some other common options to understand the data structure at a glance.
+
+```{r}
+str(mlo)
+head(mlo)
+```
+
+We will be plotting a timeseries, and have the columns of `year`, `month`, and `decimal date` available. However, R has a special date format we'll use instead, which looks nice in axes labels and encodes the number of days since 1970-01-01. First, this variable needs to be created using the `dplyr::mutate()` function, which can be sequenced with the pipe operator `|>`.
+
+```{r}
+mlo <- mlo |>
+  mutate(date = as.Date(paste0(year, "-", month, "-01")))
+
+class(mlo$date)
+```
+
+You can look up the documentation for a function easily in the console using the question mark before a valid function name, e.g., `?as.Date`. In our use case, we are providing a character string using `paste0()` to combine elements into the ISO standard date format of YYYY-MM-DD.
+
+Time to make the plot!
+
+```{r}
+ggplot(data = mlo,
+       mapping = aes(x = date, y = average)) +
+  geom_point()
+```
+
+This already looks pretty good. Below are some ways to make the figure look a little more polished.
+
+```{r}
+ggplot(data = mlo,
+       mapping = aes(x = date, y = average)) +
+  geom_point(size = 0.5) +
+  scale_y_continuous(name = expression(paste("Mean monthly ", CO[2], "conc. (ppm)"))) +
+  theme_bw(base_size = 14)
+```
+
+Try commenting out each line of the code above with a `#` to see what happens. Add a red line beneath the points to connect the values. Hint: visual layers can be added with `geom_*` or `stat_*`, and you can start typing `?geom_` in the console to see a list of possible functions.
+
+```{r}
+# Add your code below
+```
+
+Next, we can annotate the figure with additional layers in order to draw attention to particular features. Let's add a vertical line indicating your birthday.
+
+```{r}
+# Modify the code below
+mybirthday <- as.Date("YYYY-MM-DD") # replace with your actual birthday
+
+# Copy your plotting code from the previous code chunk 
+# and use geom_vline() to annotate with your birthday
+
+```
+
+Finally, we can also add the same type of visual feature, but with different data. In this case, recall that the reason for seasonal variation in atmospheric \[CO~2~\] involves the seasonality of productivity in temperate regions and the land area mismatch between the Northern and Southern hemispheres. Quick check: Do you expect the Northern hemisphere summer to have the highest or lowest \[CO~2~\] of the year?
+
+Let's check this understanding empirically.
+
+```{r}
+# Modify the code below
+NH_summer <- mlo |>
+  filter(month %in% c(x, y, z)) # replace with numbers representing summer months
+
+# Copy your plotting code from the previous code chunk 
+# and use a second geom_point() layer with the NH_summer data
+# and change their color to "forestgreen"
+
+```
+
+### Check your understanding (written response required)
+
+Did your initially chosen summer months match your prediction? Why or why not? Hint: try designating another 3 months as the Northern hemisphere summer in the code chunk above.
+
+## Part II: Photosynthetic response curves
+
+The seasonal fluctuation in atmospheric \[CO~2~\] is produced by photosynthesis, a critical biochemical reaction that represents the entry point of energy into the biosphere. At the leaf level, we can use portable gas exchange systems to measure the concentration and fluxes of H~2~O and CO~2~, from which a variety of parameters can be estimated. Here, we are particularly concerned with the maximum capacity of C3 photosynthesis, considered an intrinsic leaf property and widely used to in the Farquhar model of photosynthesis ([Farquhar et al. 1980](https://link.springer.com/article/10.1007/BF00386231), [von Caemmerer 2000](https://www.publish.csiro.au/book/1592)). The FvCB model has been widely incorporated into canopy, ecosystem, and global models of CO~2~ flux. 
+
+The maximum capacity of photosynthesis is generally represented by 3 parameters: (1) the maximum rate of carboxylation, V~cmax~, in the Calvin-Benson cycle, where the enzyme Rubisco is thought to be the rate-limiting step, and (2) the maximum rate of photosynthetic electron transport, J~max~, in the regeneration of RuBP, though to be limited by the rate of water splitting in photosystem II, and (3) the maximum rate of triose phosphate utilization, T~pmax~, relates to the limitation of sucrose conversion or transport in the chloroplast but will not be considered here. 
+We will be exploring a dataset from the [SPRUCE](https://mnspruce.ornl.gov/) project, which is documented [here](https://mnspruce.ornl.gov/datasets/spruce-photosynthesis-and-respiration-of-picea-mariana-and-larix-laricina-in-spruce).  [Dusenge et al. 2024])(https://onlinelibrary.wiley.com/doi/full/10.1111/pce.15068) published recent analysis of temperature and CO~2~ acclimation of photosynthesis in two species, *Larix laricina* and *Picea mariana*, from this experiment. 
+
+We will need some additional libraries in this part; use `install.packages()` for the first time only. 
+
+```{r}
+# install.packages("readxl")
+library(readxl)
+# install.packages("plantecophys)
+library(plantecophys)
+```
+
+This dataset has a separate metadata document, so there is no need to skip rows. However, there is a second row of units that we need to skip over. 
+
+```{r}
+aci_header <- read_xlsx("SPRUCE_Photo_Rd_Trees_2016_2017.xlsx",
+                      n_max = 1)
+aci_data <- read_xlsx("SPRUCE_Photo_Rd_Trees_2016_2017.xlsx",
+                      skip = 1)
+
+colnames(aci_data) <- colnames(aci_header)
+str(aci_data)
+```
+
+We will focus on comparing the two species of "lala" (Larix laricina) and "pima" (Picea mariana) from the control temperature and CO~2~ treatment. The following chunk of code creates a new dataframe that only contains the control data for current-year needles. Then, we'll make a quick plot of the ACi curves by tree and temperature. 
+
+```{r}
+aci_control <- aci_data |>
+  filter(Diff_Temp_Treatment == 0,
+         CO2_Treatment == "ambient CO2",
+         Needle_Cohort_age == "current-year")
+
+aci_control |>
+  ggplot(aes(x = Ci,
+             y = Photo_Rd,
+             shape = Species,
+             color = Tleaf)) +
+  geom_point() +
+  facet_wrap(~Tree)
+```
+
+What do you observe in this plot? How does `facet_wrap()` alter the plot? What conclusions can you draw regarding empirical data collection?
+
+ACi curves were only measured in 2017,and they were performed at 4-5 temperatures. For the sake of simplicity, we will further select a single representative of each species from the same day of measurement at a single temperature of 25 C.  
+
+```{r}
+aci_lala <- aci_control |>
+  filter(Species == "lala",
+         Date == as.Date("2017-08-13"),
+         Tleaf >= 24.9,
+         Tleaf <= 25.1)
+
+aci_pima <- aci_control |>
+  filter(Species == "pima",
+         Date == as.Date("2017-08-13"),
+         Tleaf >= 24.9,
+         Tleaf <= 25.1)  
+
+# Plot 2 dataframes together
+ggplot() +
+  geom_point(data = aci_lala,
+             aes(x = Ci, y = Photo_Rd,
+                 color = "Larix laricina")) +
+  geom_point(data = aci_pima,
+             aes(x = Ci, y = Photo_Rd,
+                 color = "Picea mariana")) +
+  scale_y_continuous(expression(paste("A (", mu, "mol ", m^-2, " ", s^-1, ")"))) +
+  scale_x_continuous(expression(paste(C[i], " (", mu, "mol ", mol^-1, ")"))) +
+  theme_bw(base_size = 14) +
+  theme(legend.title = element_blank(),
+        legend.position = "inside",
+        legend.position.inside = c(0.8, 0.2))
+```
+
+Next, we will use the `fitaci()` function from the 'plantecophys'package to fit the FvCB model and derive the parameters of V~cmax~ and J~max~. 
+
+```{r}
+lala <- fitaci(data = aci_lala,
+       varnames = list(ALEAF = "Photo_Rd",
+                       Tleaf = "Tleaf",
+                       Ci = "Ci", 
+                       PPFD = "PPFD"),
+       fitmethod = "bilinear")
+lala$pars
+
+pima <- fitaci(data = aci_pima,
+       varnames = list(ALEAF = "Photo_Rd",
+                       Tleaf = "Tleaf",
+                       Ci = "Ci", 
+                       PPFD = "PPFD"),
+       fitmethod = "bilinear")
+pima$pars
+
+```
+
+For both sets of estimated parameters, there is no standard error on J~max~, due to the fitting method and the fact that light response curves were not measured. We will not put much faith in to the J~max~ estimate. Nonetheless, we can use the default plotting method for the `fitaci()` output to see how well the data are matched by the parameters. 
+
+```{r}
+plot(lala)
+plot(pima)
+```
+In this particular case, the fit for *Larix* looks like a standard ACi curve, although *Picea* apparently has the higher V~cmax~. Check in with Fig. 1 from Dusenge et al. 2024. Do our values of V~cmax~ accord with their reported values?
+
+### Check your understanding (written response required)
+
+The *Larix* ACi curve reports the Ci transition, which can be extracted.
+
+```{r}
+lala$Ci_transition
+```
+
+What does the Ci transition represent and how does the magnitude of this value compare with current atmospheric [CO~2~]? Assuming this value is broadly representative of *Larix laricina*, can CO[2] fertilization increase photosynthesis in this species? Consider the diffusional pathway of CO~2~ in your answer. 
+
+## Part III: FACE experiments (written response required)
+
+A review of FACE experiments is provided as a pdf in this repository. Please read the abstract, introduction, and hypotheses 1, 2, 4, and 8 as evaluated in Norby and Zak (2011). What is some evidence from FACE experiments that CO~2~ fertilization can a negative feedback on anthropogenic carbon emissions by increasing photosynthesis and carbon storage? What are some processes that can disrupt this negative feedback? Please consider the complexity of scaling from the biochemistry of photosynthesis to entire ecosystems.   
