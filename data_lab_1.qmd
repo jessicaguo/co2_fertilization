@@ -234,7 +234,7 @@ The *Larix* A-Ci curve reports the Ci transition, which can be extracted.
 lala$Ci_transition
 ```
 
-What does the Ci transition represent and how does the magnitude of this value compare with current atmospheric \[CO~2~\]? Assuming this value is broadly representative of *Larix laricina*, can CO~2~ fertilization increase photosynthesis in this species? Consider the diffusional pathway of CO~2~ in your answer.
+What does the Ci transition represent and how does the magnitude of this value compare with current atmospheric \[CO~2~\]? Assuming this value is broadly representative of *Larix laricina*, can CO~2~ fertilization increase photosynthesis in this species? Consider the diffusional pathway of CO~2~ in your answer (see Bonan Chp 16.7 for brief reference).
 
 ## Part III: FACE experiments (written response required)
 
