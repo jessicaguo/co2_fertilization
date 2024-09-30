@@ -18,7 +18,7 @@ In part III, we will read a review of ecosystem-scale CO~2~ experiments, known c
 
 ### A technical note
 
-This is a [Quarto document](https://quarto.org/), the successor to Rmarkdown that contains some fun new features, such as the ability to run Python. We will use it in class to combine chunks of R code with blocks of prose. When turning in your assignment, please upload both the .qmd file and the rendered .pdf.
+This is a [Quarto document](https://quarto.org/), the successor to Rmarkdown that contains some fun new features, such as the ability to run Python. We will use it in class to combine chunks of R code with blocks of prose. When turning in your assignment, please upload the rendered .pdf to Canvas.
 
 ## Part I: Mauna Loa \[CO~2~\]
 
