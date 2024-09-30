@@ -16,15 +16,13 @@ In part II, we will zoom in to examine some controls on leaf-level photosynthesi
 
 In part III, we will read a review of ecosystem-scale CO~2~ experiments, known collectively as Free Air CO~2~ Enrichment (FACE). How and to what extent do predictions from understanding the biochemistry of photosynthesis hold when considering the whole ecosystem?
 
-Finally, your assignment will close with a written discussion synthesizing empirical and theoretical evidence for CO~2~ fertilization of photosynthesis across leaf, ecosystem, and global scales.
-
 ### A technical note
 
-This is a [Quarto document](https://quarto.org/), the successor to Rmarkdown that contains some fun new features. We will use it in class to combine chunks of code with blocks of prose. When turning in your assignment, please upload both the .qmd file and the rendered .pdf.
+This is a [Quarto document](https://quarto.org/), the successor to Rmarkdown that contains some fun new features, such as the ability to run Python. We will use it in class to combine chunks of R code with blocks of prose. When turning in your assignment, please upload both the .qmd file and the rendered .pdf.
 
 ## Part I: Mauna Loa \[CO~2~\]
 
-You have probably seen these data presented in lectures and texts. We are going to plot it ourselves! These data were originally sampled by Dr. C. David Keeling of the Scripps Institution of Oceanography and can be downloaded freely from [NOAA](https://gml.noaa.gov/ccgg/trends/data.html). Read more about the history of the Keeling curve [here](https://keelingcurve.ucsd.edu/2013/04/03/the-history-of-the-keeling-curve/).
+You have probably seen the Mauna Loa CO~2~ curve presented in lectures and texts. We are going to plot it ourselves! These data were originally sampled by Dr. C. David Keeling of the Scripps Institution of Oceanography and can be downloaded freely from [NOAA](https://gml.noaa.gov/ccgg/trends/data.html). Read more about the history of the Keeling curve [here](https://keelingcurve.ucsd.edu/2013/04/03/the-history-of-the-keeling-curve/).
 
 I have included the .csv file in the repository; our goal is to read it in, create a pleasantly readable plot, and annotate it to further understand the seasonal fluctuations in atmospheric \[CO~2~\].
 
@@ -101,7 +99,7 @@ mybirthday <- as.Date("YYYY-MM-DD") # replace with your actual birthday
 
 Finally, we can also add the same type of visual feature, but with different data. In this case, recall that the reason for seasonal variation in atmospheric \[CO~2~\] involves the seasonality of productivity in temperate regions and the land area mismatch between the Northern and Southern hemispheres. Quick check: Do you expect the Northern hemisphere summer to have the highest or lowest \[CO~2~\] of the year?
 
-Let's check this understanding empirically.
+Let's check this understanding empirically. Repeat as needed until you are confident you've captured the months with maximum \[CO~2~\].
 
 ```{r}
 # Modify the code below
@@ -116,16 +114,17 @@ NH_summer <- mlo |>
 
 ### Check your understanding (written response required)
 
-Did your initially chosen summer months match your prediction? Why or why not? Hint: try designating another 3 months as the Northern hemisphere summer in the code chunk above.
+Did your initially chosen summer months match your prediction? Which months ended up matching the maximum in \[CO~2~\], and why do you think this is?
 
 ## Part II: Photosynthetic response curves
 
-The seasonal fluctuation in atmospheric \[CO~2~\] is produced by photosynthesis, a critical biochemical reaction that represents the entry point of energy into the biosphere. At the leaf level, we can use portable gas exchange systems to measure the concentration and fluxes of H~2~O and CO~2~, from which a variety of parameters can be estimated. Here, we are particularly concerned with the maximum capacity of C3 photosynthesis, considered an intrinsic leaf property and widely used to in the Farquhar model of photosynthesis ([Farquhar et al. 1980](https://link.springer.com/article/10.1007/BF00386231), [von Caemmerer 2000](https://www.publish.csiro.au/book/1592)). The FvCB model has been widely incorporated into canopy, ecosystem, and global models of CO~2~ flux. 
+The seasonal fluctuation in atmospheric \[CO~2~\] is produced by photosynthesis, a critical biochemical reaction that represents the entry point of energy into the biosphere. At the leaf level, we can use portable gas exchange systems to measure the concentration and fluxes of H~2~O and CO~2~, from which a variety of parameters can be estimated. Here, we are particularly concerned with the maximum capacity of C3 photosynthesis, considered an intrinsic leaf property and widely used to in the Farquhar model of photosynthesis ([Farquhar et al. 1980](https://link.springer.com/article/10.1007/BF00386231), [von Caemmerer 2000](https://www.publish.csiro.au/book/1592)) based on enzyme kinetics. The FvCB model has been widely incorporated into canopy, ecosystem, and global models of CO~2~ flux.
 
-The maximum capacity of photosynthesis is generally represented by 3 parameters: (1) the maximum rate of carboxylation, V~cmax~, in the Calvin-Benson cycle, where the enzyme Rubisco is thought to be the rate-limiting step, and (2) the maximum rate of photosynthetic electron transport, J~max~, in the regeneration of RuBP, though to be limited by the rate of water splitting in photosystem II, and (3) the maximum rate of triose phosphate utilization, T~pmax~, relates to the limitation of sucrose conversion or transport in the chloroplast but will not be considered here. 
-We will be exploring a dataset from the [SPRUCE](https://mnspruce.ornl.gov/) project, which is documented [here](https://mnspruce.ornl.gov/datasets/spruce-photosynthesis-and-respiration-of-picea-mariana-and-larix-laricina-in-spruce).  [Dusenge et al. 2024])(https://onlinelibrary.wiley.com/doi/full/10.1111/pce.15068) published recent analysis of temperature and CO~2~ acclimation of photosynthesis in two species, *Larix laricina* and *Picea mariana*, from this experiment. 
+The maximum capacity of photosynthesis is generally represented by 3 parameters: (1) the maximum rate of carboxylation, V~cmax~, in the Calvin-Benson cycle, where the enzyme Rubisco is thought to be the rate-limiting step, and (2) the maximum rate of photosynthetic electron transport, J~max~, in the regeneration of RuBP, though to be limited by the rate of water splitting in photosystem II, and (3) the maximum rate of triose phosphate utilization, T~pmax~, relates to the limitation of sucrose conversion or transport in the chloroplast but is not included in the original photosynthesis model.
 
-We will need some additional libraries in this part; use `install.packages()` for the first time only. 
+We will be exploring a dataset from the [SPRUCE](https://mnspruce.ornl.gov/) project, which is documented [here](https://mnspruce.ornl.gov/datasets/spruce-photosynthesis-and-respiration-of-picea-mariana-and-larix-laricina-in-spruce). [Dusenge et al. 2024](https://onlinelibrary.wiley.com/doi/full/10.1111/pce.15068) published recent analysis of temperature and CO~2~ acclimation of photosynthesis in two species, *Larix laricina* and *Picea mariana*, from this experiment.
+
+We will need some additional libraries in this part; un-comment and use `install.packages()` for the first time only.
 
 ```{r}
 # install.packages("readxl")
@@ -134,7 +133,7 @@ library(readxl)
 library(plantecophys)
 ```
 
-This dataset has a separate metadata document, so there is no need to skip rows. However, there is a second row of units that we need to skip over. 
+This dataset has a separate metadata document, so there is no need to skip rows. However, there is a second row of units that we need to skip over.
 
 ```{r}
 aci_header <- read_xlsx("SPRUCE_Photo_Rd_Trees_2016_2017.xlsx",
@@ -142,11 +141,12 @@ aci_header <- read_xlsx("SPRUCE_Photo_Rd_Trees_2016_2017.xlsx",
 aci_data <- read_xlsx("SPRUCE_Photo_Rd_Trees_2016_2017.xlsx",
                       skip = 1)
 
+# Reassign the column names of aci_data from the column  names of aci_header
 colnames(aci_data) <- colnames(aci_header)
 str(aci_data)
 ```
 
-We will focus on comparing the two species of "lala" (Larix laricina) and "pima" (Picea mariana) from the control temperature and CO~2~ treatment. The following chunk of code creates a new dataframe that only contains the control data for current-year needles. Then, we'll make a quick plot of the ACi curves by tree and temperature. 
+We will focus on comparing the two species of "lala" (*Larix laricina*) and "pima" (*Picea mariana*) from the control temperature and CO~2~ treatment. The following chunk of code creates a new dataframe that only contains the control data for current-year needles. Then, we'll make a quick plot of the A-Ci curves by tree and temperature.
 
 ```{r}
 aci_control <- aci_data |>
@@ -165,7 +165,7 @@ aci_control |>
 
 What do you observe in this plot? How does `facet_wrap()` alter the plot? What conclusions can you draw regarding empirical data collection?
 
-ACi curves were only measured in 2017,and they were performed at 4-5 temperatures. For the sake of simplicity, we will further select a single representative of each species from the same day of measurement at a single temperature of 25 C.  
+ACi curves were only measured in 2017,and they were performed at 4-5 temperatures. For the sake of simplicity, we will further select a single representative of each species from the same day of measurement at a single temperature of 25 C.
 
 ```{r}
 aci_lala <- aci_control |>
@@ -196,7 +196,7 @@ ggplot() +
         legend.position.inside = c(0.8, 0.2))
 ```
 
-Next, we will use the `fitaci()` function from the 'plantecophys'package to fit the FvCB model and derive the parameters of V~cmax~ and J~max~. 
+Next, we will use the `fitaci()` function from the 'plantecophys'package to fit the FvCB model and derive the parameters of V~cmax~ and J~max~.
 
 ```{r}
 lala <- fitaci(data = aci_lala,
@@ -217,24 +217,25 @@ pima$pars
 
 ```
 
-For both sets of estimated parameters, there is no standard error on J~max~, due to the fitting method and the fact that light response curves were not measured. We will not put much faith in to the J~max~ estimate. Nonetheless, we can use the default plotting method for the `fitaci()` output to see how well the data are matched by the parameters. 
+For both sets of estimated parameters, there is no standard error on J~max~, due to the fitting method and the fact that light response curves were not measured. We will not put much faith in to the J~max~ estimate. Nonetheless, we can use the default plotting method for the `fitaci()` output to see how well the data are matched by the parameters.
 
 ```{r}
 plot(lala)
 plot(pima)
 ```
-In this particular case, the fit for *Larix* looks like a standard ACi curve, although *Picea* apparently has the higher V~cmax~. Check in with Fig. 1 from Dusenge et al. 2024. Do our values of V~cmax~ accord with their reported values?
+
+In this particular case, the fit for *Larix* looks like a standard ACi curve, although *Picea* apparently has the higher V~cmax~. Check in with Fig. 1 from [Dusenge et al. 2024](https://onlinelibrary.wiley.com/doi/full/10.1111/pce.15068). Do our values of V~cmax~ accord with their reported values?
 
 ### Check your understanding (written response required)
 
-The *Larix* ACi curve reports the Ci transition, which can be extracted.
+The *Larix* A-Ci curve reports the Ci transition, which can be extracted.
 
 ```{r}
 lala$Ci_transition
 ```
 
-What does the Ci transition represent and how does the magnitude of this value compare with current atmospheric [CO~2~]? Assuming this value is broadly representative of *Larix laricina*, can CO[2] fertilization increase photosynthesis in this species? Consider the diffusional pathway of CO~2~ in your answer. 
+What does the Ci transition represent and how does the magnitude of this value compare with current atmospheric \[CO~2~\]? Assuming this value is broadly representative of *Larix laricina*, can CO~2~ fertilization increase photosynthesis in this species? Consider the diffusional pathway of CO~2~ in your answer.
 
 ## Part III: FACE experiments (written response required)
 
-A review of FACE experiments is provided as a pdf in this repository. Please read the abstract, introduction, and hypotheses 1, 2, 4, and 8 as evaluated in Norby and Zak (2011). What is some evidence from FACE experiments that CO~2~ fertilization can a negative feedback on anthropogenic carbon emissions by increasing photosynthesis and carbon storage? What are some processes that can disrupt this negative feedback? Please consider the complexity of scaling from the biochemistry of photosynthesis to entire ecosystems.   
+A review of FACE experiments is provided as a pdf in this repository. Please read the abstract, introduction, and hypotheses 1, 2, 4, and 8 as evaluated in Norby and Zak (2011). What is the evidence from FACE experiments that CO~2~ fertilization can a negative feedback on anthropogenic carbon emissions by increasing photosynthesis and carbon storage? What are some processes that can disrupt this negative feedback? Consider the complexity of scaling from the biochemistry of photosynthesis to entire ecosystems, and include citations of this paper and your textbook where appropriate. 
