@@ -1,7 +1,9 @@
 ---
 title: "CO2 fertilization of photosynthesis"
 format: pdf
-editor: visual
+editor: source
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Objectives
@@ -18,11 +20,11 @@ In part III, we will read a review of ecosystem-scale CO~2~ experiments, known c
 
 ### A technical note
 
-This is a [Quarto document](https://quarto.org/), the successor to Rmarkdown that contains some fun new features, such as the ability to run Python. We will use it in class to combine chunks of R code with blocks of prose. When turning in your assignment, please upload the rendered .pdf to Canvas.
+This is a [Quarto document](https://quarto.org/), the successor to Rmarkdown that contains some fun new features, such as the ability to run Python. We will use it in class to combine chunks of R code with blocks of prose. When turning in your assignment, please upload the rendered .pdf to Gradescope/Canvas.
 
 ## Part I: Mauna Loa \[CO~2~\]
 
-You have probably seen the Mauna Loa CO~2~ curve presented in lectures and texts. We are going to plot it ourselves! These data were originally sampled by Dr. C. David Keeling of the Scripps Institution of Oceanography and can be downloaded freely from [NOAA](https://gml.noaa.gov/ccgg/trends/data.html). Read more about the history of the Keeling curve [here](https://keelingcurve.ucsd.edu/2013/04/03/the-history-of-the-keeling-curve/).
+You have likely seen the Mauna Loa CO~2~ curve presented in lectures and texts. We are going to plot it ourselves! These data were originally sampled by Dr. C. David Keeling of the Scripps Institution of Oceanography and can be downloaded freely from [NOAA](https://gml.noaa.gov/ccgg/trends/data.html). Read more about the history of the Keeling curve [here](https://keelingcurve.ucsd.edu/2013/04/03/the-history-of-the-keeling-curve/).
 
 I have included the .csv file in the repository; our goal is to read it in, create a pleasantly readable plot, and annotate it to further understand the seasonal fluctuations in atmospheric \[CO~2~\].
 
@@ -86,7 +88,7 @@ ggplot(data = mlo,
 
 ### Q2 (0.5 points)
 
-Try commenting out each line of the code above with a `#` to see what happens. Add a red line beneath the points to connect the values. Hint: visual layers can be added with `geom_*` or `stat_*`, and you can start typing `?geom_` in the console to see a list of possible functions.
+Try commenting out each line of the code above with a `#` to understand the purpose of each layer. Add a red line beneath the points to connect the values. Hint: visual layers can be added with `geom_*` or `stat_*`, and you can start typing `?geom_` in the console to see a list of possible functions.
 
 ```{r}
 # Add your code below
@@ -231,7 +233,7 @@ pima$pars
 
 ```
 
-For both sets of estimated parameters, there is no standard error on J~max~, due to the fitting method and the fact that light response curves were not measured. We will not put much faith in to the J~max~ estimate. Nonetheless, we can use the default plotting method for the `fitaci()` output to see how well the data are matched by the parameters.
+For both sets of estimated parameters, there is no standard error on J~max~, due to the fitting method and the fact that light response curves were not measured. Therefore, we will not put much faith in to the J~max~ estimate. Nonetheless, we can use the default plotting method for the `fitaci()` output to see how well the data are matched by the parameters.
 
 ```{r}
 plot(lala)
